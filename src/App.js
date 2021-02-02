@@ -15,12 +15,27 @@ function App() {
   const [breakTime, setBreakTime] = react.useState(5*60);
   const [actualTimer, setActualTimer] = react.useState(0)
   // timers running
-  const [workTimerRunning, setWorkTimerRunning] = react.useState(true)
+  const [workTimerRunning, setWorkTimerRunning] = react.useState(false)
   const [breakTimerRunning, setBreakTimerRunning] = react.useState(false)
-  const [timerTimeOut, setTimerTimeOut] = react.useState(null)
-  
+  const [actualTimerRunning, setActualTimerRunning] =  react.useState(false)
 
-  
+  useEffect(() => {
+    if(!workTimerRunning){
+      setActualTimer(workTimer)
+      while(actualTimer > 0){
+        setTimeout(() => {
+          setActualTimer(actualTimer - 1)
+        }
+        ,1000)
+        if(actualTimer == 1){
+          setWorkTimer(true)
+        }
+      }
+    }
+    else if (workTimerRunning && !breakTimerRunning){
+      setActualTimer(breakTime)
+    }
+  })
 
   return (
     <div className="App">
@@ -41,7 +56,7 @@ function App() {
             <div 
               id="session-decrement" 
               className="col-3"
-              
+              onClick={() => {setWorkTimer(workTimer + 60)}}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-arrow-down-circle" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
@@ -54,7 +69,11 @@ function App() {
                 {(workTimer) / 60}
               </p>
             </div>
-            <div id="session-increment" className="col-3">
+            <div 
+              id="session-increment" 
+              className="col-3"
+              onClick={() => {setWorkTimer(workTimer - 60)}}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
               </svg>
@@ -66,11 +85,17 @@ function App() {
           <p 
             id="break-label"
             className="h2"
-          >Break Timer</p>
+          >
+            Break Timer
+          </p>
           <div
             className="row justify-content-md-center"
           >
-            <div id="break-decrement" className="col-3">
+            <div 
+              id="break-decrement" 
+              className="col-3"
+              onClick={() => {setBreakTime(breakTime - 60)}}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-arrow-down-circle" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
               </svg>
@@ -82,7 +107,11 @@ function App() {
                 {breakTime/60}
               </p>
             </div>
-            <div id="break-increment" className="col-3">
+            <div 
+              id="break-increment" 
+              className="col-3"
+              onClick={() => {setBreakTime(breakTime + 60)}}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-arrow-up-circle" viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
               </svg>
@@ -104,7 +133,11 @@ function App() {
           </svg>
         </div>
         <div id="session-left" className="col-3">
-          {formatTime(actualTimer)}
+          <p
+            className="h3"
+          >
+            {formatTime(actualTimer)}
+          </p>
         </div>
         <div id="reset" className="col-3">
           <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-arrow-repeat" viewBox="0 0 16 16">
