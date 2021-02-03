@@ -1,6 +1,8 @@
 
 import './App.css';
 import react, { useEffect } from 'react';
+import useCountDown from 'react-countdown-hook';
+
 
 let formatTime = (timeInSec) => {
   return new Date(timeInSec * 1000).toISOString().substr(14, 5)
@@ -15,27 +17,15 @@ function App() {
   const [breakTime, setBreakTime] = react.useState(5*60);
   const [actualTimer, setActualTimer] = react.useState(0)
   // timers running
-  const [workTimerRunning, setWorkTimerRunning] = react.useState(false)
+  const [workTimerRunning, setWorkTimerRunning] = react.useState(true)
   const [breakTimerRunning, setBreakTimerRunning] = react.useState(false)
   const [actualTimerRunning, setActualTimerRunning] =  react.useState(false)
 
-  useEffect(() => {
-    if(!workTimerRunning){
-      setActualTimer(workTimer)
-      while(actualTimer > 0){
-        setTimeout(() => {
-          setActualTimer(actualTimer - 1)
-        }
-        ,1000)
-        if(actualTimer == 1){
-          setWorkTimer(true)
-        }
-      }
-    }
-    else if (workTimerRunning && !breakTimerRunning){
-      setActualTimer(breakTime)
-    }
-  })
+  const [timerTimeout, setTimerTimeout] = react.useState(null)
+
+  const [timeLeft, { start, pause, resume, reset }] = useCountDown(0, 1000);
+
+
 
   return (
     <div className="App">
@@ -122,7 +112,11 @@ function App() {
       </div >
 
       <div id="controls" className="row mt-4 justify-content-md-center">
-        <div id="start_stop" className="col-3">
+        <div 
+          id="start_stop" 
+          className="col-3"
+          onClick={}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-play-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
             <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
