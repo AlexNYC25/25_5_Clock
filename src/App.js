@@ -3,28 +3,45 @@ import './App.css';
 import react, { useEffect } from 'react';
 import useCountDown from 'react-countdown-hook';
 
-
-let formatTime = (timeInSec) => {
-  return new Date(timeInSec * 1000).toISOString().substr(14, 5)
-
-};
-
-
-
 function App() {
   // set default time values in state variables
   const [workTimer, setWorkTimer] = react.useState(25*60);
   const [breakTime, setBreakTime] = react.useState(5*60);
-  const [actualTimer, setActualTimer] = react.useState(0)
   // timers running
   const [workTimerRunning, setWorkTimerRunning] = react.useState(true)
   const [breakTimerRunning, setBreakTimerRunning] = react.useState(false)
   const [actualTimerRunning, setActualTimerRunning] =  react.useState(false)
 
-  const [timerTimeout, setTimerTimeout] = react.useState(null)
 
   const [timeLeft, { start, pause, resume, reset }] = useCountDown(0, 1000);
 
+  let handlePlayClick = () => {
+    if(timeLeft === 0){
+      setWorkTimerRunning(!workTimerRunning)
+      setBreakTimerRunning(!breakTimerRunning)
+
+      if(workTimerRunning){
+        start(workTimer * 1000)
+        setActualTimerRunning(true)
+      }
+      else {
+        start(breakTime * 1000)
+        setActualTimerRunning(true)
+      }
+    }
+    else{
+      if(actualTimerRunning){
+        pause()
+        setActualTimerRunning(false)
+      }
+      else{
+        resume();
+        setActualTimerRunning(true)
+      }
+    }
+    
+    
+  }
 
 
   return (
@@ -115,7 +132,7 @@ function App() {
         <div 
           id="start_stop" 
           className="col-3"
-          onClick={}
+          onClick={handlePlayClick}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" className="bi bi-play-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -130,7 +147,7 @@ function App() {
           <p
             className="h3"
           >
-            {formatTime(actualTimer)}
+            {(timeLeft)}
           </p>
         </div>
         <div id="reset" className="col-3">
