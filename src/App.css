@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+
+html,body {
+  background-color: darkseagreen;
+  background-image: url('./images/pexels-cottonbro-4626371.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+body {
+  color: white
+}
